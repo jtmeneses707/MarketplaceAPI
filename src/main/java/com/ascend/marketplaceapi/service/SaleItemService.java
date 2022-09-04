@@ -10,4 +10,6 @@ public interface SaleItemService {
   List<SaleItem> getAll();
 
   SaleItem getById(SaleItem saleItem);
+
+  SaleItem create(SaleItem saleItem);
 }

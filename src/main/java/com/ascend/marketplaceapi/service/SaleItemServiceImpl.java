@@ -1,12 +1,11 @@
 package com.ascend.marketplaceapi.service;
 
+import com.ascend.marketplaceapi.exception.ItemAlreadyExistsException;
 import com.ascend.marketplaceapi.exception.ItemNotFoundException;
 import com.ascend.marketplaceapi.model.SaleItem;
 import com.ascend.marketplaceapi.repository.SaleItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,6 @@ public class SaleItemServiceImpl implements SaleItemService {
     return repo.findAll();
   }
 
-  // TODO: CREATE @ControllerAdvice and custom exceptiosn to use in Service
   @Override
   public SaleItem getById(SaleItem saleItem) {
 
@@ -31,6 +29,15 @@ public class SaleItemServiceImpl implements SaleItemService {
         throw new ItemNotFoundException("Item not found in DB");
       }
       return item.get();
+  }
+
+  @Override
+  public SaleItem create(SaleItem saleItem) {
+    Optional<SaleItem> possibleMatch = repo.findById(saleItem.getItemId());
+    if (possibleMatch.isPresent()) {
+      throw new ItemAlreadyExistsException("Item with same ID already exists in DB");
+    }
+    return repo.save(saleItem);
   }
 
 }
