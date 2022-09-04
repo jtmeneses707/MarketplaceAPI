@@ -12,4 +12,6 @@ public interface SaleItemService {
   SaleItem getById(SaleItem saleItem);
 
   SaleItem create(SaleItem saleItem);
+
+  SaleItem update(SaleItem saleItem);
 }

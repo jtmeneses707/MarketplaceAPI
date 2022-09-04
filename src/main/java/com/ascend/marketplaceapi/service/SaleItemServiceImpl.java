@@ -40,4 +40,13 @@ public class SaleItemServiceImpl implements SaleItemService {
     return repo.save(saleItem);
   }
 
+  @Override
+  public SaleItem update(SaleItem saleItem) {
+    Optional<SaleItem> possibleMatch = repo.findById(saleItem.getItemId());
+    if (!possibleMatch.isPresent()) {
+      throw new ItemNotFoundException("Item not found in DB");
+    }
+    return repo.save(saleItem);
+  }
+
 }

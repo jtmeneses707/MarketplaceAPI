@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +35,7 @@ public class SaleItemController {
     return ResponseEntity.status(HttpStatus.OK).body(resBody);
   }
 
-  @GetMapping("create")
+  @PostMapping("create")
   ResponseEntity<HashMap<Object, Object>> create(@RequestBody SaleItem saleItem) {
     HashMap<Object, Object> resBody = new HashMap<>();
     SaleItem createdItem = saleItemService.create(saleItem);
@@ -42,15 +43,32 @@ public class SaleItemController {
     return ResponseEntity.status(HttpStatus.CREATED).body(resBody);
   }
 
+  @PutMapping("put/{id}")
+  ResponseEntity<HashMap<Object, Object>> put(@RequestBody SaleItem saleItem, @PathVariable Integer id) {
+    // TODO: DECIDE IF ID IS NEEDED IN THE REQUEST BODY, OR IF SHOULD SOLELY RELY ON ID IN PATH.
+    // Check that ID in path URL matches ID in the body.
+    if (!Objects.equals(id, saleItem.getItemId())) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+    }
+
+    HashMap<Object, Object> resBody = new HashMap<>();
+    SaleItem updatedItem = saleItemService.update(saleItem);
+    resBody.put("updatedItem", updatedItem);
+    return ResponseEntity.status(HttpStatus.OK).body(resBody);
+  }
+
 
   /**
    * Global exception handler. Handles all exceptions thrown by persistence layer (services).
+   * These errors are of type RuntimeException.
    * Examples of custom created handled exceptions are ItemNotFound and ItemAlreadyExists
    */
   @ControllerAdvice
   @ResponseBody
   static
   class GlobalControllerExceptionHandler {
+
+    // Thrown when business logic cannot occur if item does not exist.
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ItemNotFoundException.class)
     public HashMap<Object, Object> handleNotFound() {
@@ -59,6 +77,7 @@ public class SaleItemController {
       return resBody;
     }
 
+    // Thrown when business logic cannot occur if item already exists.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ItemAlreadyExistsException.class)
     public HashMap<Object,Object> handleAlreadyExists() {
