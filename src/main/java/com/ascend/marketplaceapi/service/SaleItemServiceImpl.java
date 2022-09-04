@@ -4,11 +4,13 @@ import com.ascend.marketplaceapi.model.SaleItem;
 import com.ascend.marketplaceapi.repository.SaleItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class SaleItemServiceImpl implements SaleItemService {
 
   @Autowired
@@ -19,6 +21,7 @@ public class SaleItemServiceImpl implements SaleItemService {
     return repo.findAll();
   }
 
+  // TODO: CREATE @ControllerAdvice and custom exceptiosn to use in Service
   @Override
   public SaleItem getById(SaleItem saleItem) {
 
