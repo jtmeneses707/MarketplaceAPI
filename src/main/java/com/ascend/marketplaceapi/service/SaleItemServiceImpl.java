@@ -49,4 +49,20 @@ public class SaleItemServiceImpl implements SaleItemService {
     return repo.save(saleItem);
   }
 
+  @Override
+  public void delete(Integer id) {
+    SaleItem item = new SaleItem();
+    item.setItemId(id);
+    delete(item);
+  }
+
+  @Override
+  public void delete(SaleItem saleItem) {
+    Optional<SaleItem> possibleMatch = repo.findById(saleItem.getItemId());
+    if (!possibleMatch.isPresent()) {
+      throw new ItemNotFoundException("Item not found in DB");
+    }
+    repo.delete(saleItem);
+  }
+
 }

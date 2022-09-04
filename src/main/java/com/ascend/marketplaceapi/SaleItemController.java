@@ -15,11 +15,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+// TODO: DECIDE IF I WANT TO REFACTOR AND USE @ResponseStatus ANNOTATION
+// MAY MAKE CODE CLEANE
+
+// TODO: DECIDE IF ID IS NEEDED IN THE REQUEST BODY, OR IF SHOULD SOLELY RELY ON ID IN PATH.
+
+// TODO: DECIDE IF REFACTOR ENDPOINTS SO THAT THEY ALL SHARE SAME URL
+// EX: Can do POST, GET, DELETE, and PUT all from /api/item
+
 @RequestMapping("api/item")
 @RestController
 public class SaleItemController {
   @Autowired
   SaleItemService saleItemService;
+
+  @GetMapping("getall")
+  ResponseEntity<HashMap<Object,Object>> getAll() {
+    HashMap<Object,Object> resBody = new HashMap<>();
+    resBody.put("items", saleItemService.getAll());
+    return ResponseEntity.status(HttpStatus.OK).body(resBody);
+  }
 
   @GetMapping("getbyid/{id}")
   ResponseEntity<HashMap<Object, Object>> getById(@RequestBody SaleItem saleItem, @PathVariable Integer id) {
@@ -45,7 +60,7 @@ public class SaleItemController {
 
   @PutMapping("put/{id}")
   ResponseEntity<HashMap<Object, Object>> put(@RequestBody SaleItem saleItem, @PathVariable Integer id) {
-    // TODO: DECIDE IF ID IS NEEDED IN THE REQUEST BODY, OR IF SHOULD SOLELY RELY ON ID IN PATH.
+
     // Check that ID in path URL matches ID in the body.
     if (!Objects.equals(id, saleItem.getItemId())) {
       return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
@@ -55,6 +70,16 @@ public class SaleItemController {
     SaleItem updatedItem = saleItemService.update(saleItem);
     resBody.put("updatedItem", updatedItem);
     return ResponseEntity.status(HttpStatus.OK).body(resBody);
+  }
+
+
+  @DeleteMapping("delete/{id}")
+  ResponseEntity<HashMap<Object, Object>> delete(@PathVariable Integer id) {
+
+    HashMap<Object, Object> resBody = new HashMap<>();
+    saleItemService.delete(id);
+    resBody.put("count", 1);
+    return ResponseEntity.status(200).body(resBody);
   }
 
 
