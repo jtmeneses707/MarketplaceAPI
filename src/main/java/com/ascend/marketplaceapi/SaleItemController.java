@@ -96,27 +96,27 @@ public class SaleItemController {
     // Thrown when business logic cannot occur if item does not exist.
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ItemNotFoundException.class)
-    public HashMap<Object, Object> handleNotFound() {
+    public HashMap<Object, Object> handleNotFound(ItemNotFoundException exception) {
       HashMap<Object,Object> resBody = new HashMap<>();
-      resBody.put("cause", "ITEM DOES NOT EXIST");
+      resBody.put("cause", exception.getMessage());
       return resBody;
     }
 
     // Thrown when business logic cannot occur if item already exists.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ItemAlreadyExistsException.class)
-    public HashMap<Object,Object> handleAlreadyExists() {
+    public HashMap<Object,Object> handleAlreadyExists(ItemAlreadyExistsException exception) {
       HashMap<Object,Object> resBody = new HashMap<>();
-      resBody.put("cause", "ITEM WITH SAME ID ALREADY EXISTS");
+      resBody.put("cause", exception.getMessage());
       return resBody;
     }
 
     // Normally occurs when missing a needed field in a request body.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
-    public HashMap<Object, Object> handleIllegalArgument() {
+    public HashMap<Object, Object> handleIllegalArgument(IllegalArgumentException exception) {
       HashMap<Object, Object> resBody = new HashMap<>();
-      resBody.put("cause", "REQUEST BODY MISSING NEEDED PARAMETERS");
+      resBody.put("cause", exception.getMessage());
       return resBody;
     }
   }
