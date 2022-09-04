@@ -35,12 +35,9 @@ public class SaleItemController {
 
   @GetMapping("{id}")
   ResponseEntity<HashMap<Object, Object>> getById(@RequestBody SaleItem saleItem, @PathVariable Integer id) {
+    saleItem.setItemId(id);
     HashMap<Object, Object> resBody = new HashMap<>();
 
-    // Check that ID in path URL matches ID in the body.
-    if (!Objects.equals(id, saleItem.getItemId())) {
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-    }
 
     SaleItem item = saleItemService.getById(saleItem);
     resBody.put("item", item);
@@ -57,12 +54,7 @@ public class SaleItemController {
 
   @PutMapping("{id}")
   ResponseEntity<HashMap<Object, Object>> put(@RequestBody SaleItem saleItem, @PathVariable Integer id) {
-
-    // Check that ID in path URL matches ID in the body.
-    if (!Objects.equals(id, saleItem.getItemId())) {
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-    }
-
+    saleItem.setItemId(id);
     HashMap<Object, Object> resBody = new HashMap<>();
     SaleItem updatedItem = saleItemService.update(saleItem);
     resBody.put("updatedItem", updatedItem);
@@ -71,11 +63,13 @@ public class SaleItemController {
 
   @PatchMapping("setsold/{id}")
   ResponseEntity<HashMap<Object, Object>> setSold(@RequestBody SaleItem req, @PathVariable Integer id) {
+    req.setItemId(id);
     HashMap<Object, Object> res = new HashMap<>();
+
     if (req.getSoldTo().isEmpty()) {
       throw new IllegalArgumentException("soldTo property is missing");
     }
-    req.setItemId(id);
+
     SaleItem updatedItem = saleItemService.setSold(req);
     res.put("updatedItem", updatedItem);
     return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -83,7 +77,6 @@ public class SaleItemController {
 
   @DeleteMapping("{id}")
   ResponseEntity<HashMap<Object, Object>> delete(@PathVariable Integer id) {
-
     HashMap<Object, Object> resBody = new HashMap<>();
     saleItemService.delete(id);
     resBody.put("count", 1);
