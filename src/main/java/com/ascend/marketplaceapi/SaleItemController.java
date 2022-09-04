@@ -36,7 +36,7 @@ public class SaleItemController {
     return ResponseEntity.status(HttpStatus.OK).body(resBody);
   }
 
-  @GetMapping("getbyid/{id}")
+  @GetMapping("{id}")
   ResponseEntity<HashMap<Object, Object>> getById(@RequestBody SaleItem saleItem, @PathVariable Integer id) {
     HashMap<Object, Object> resBody = new HashMap<>();
 
@@ -50,7 +50,7 @@ public class SaleItemController {
     return ResponseEntity.status(HttpStatus.OK).body(resBody);
   }
 
-  @PostMapping("create")
+  @PostMapping("")
   ResponseEntity<HashMap<Object, Object>> create(@RequestBody SaleItem saleItem) {
     HashMap<Object, Object> resBody = new HashMap<>();
     SaleItem createdItem = saleItemService.create(saleItem);
@@ -58,7 +58,7 @@ public class SaleItemController {
     return ResponseEntity.status(HttpStatus.CREATED).body(resBody);
   }
 
-  @PutMapping("put/{id}")
+  @PutMapping("{id}")
   ResponseEntity<HashMap<Object, Object>> put(@RequestBody SaleItem saleItem, @PathVariable Integer id) {
 
     // Check that ID in path URL matches ID in the body.
@@ -73,7 +73,7 @@ public class SaleItemController {
   }
 
 
-  @DeleteMapping("delete/{id}")
+  @DeleteMapping("{id}")
   ResponseEntity<HashMap<Object, Object>> delete(@PathVariable Integer id) {
 
     HashMap<Object, Object> resBody = new HashMap<>();
