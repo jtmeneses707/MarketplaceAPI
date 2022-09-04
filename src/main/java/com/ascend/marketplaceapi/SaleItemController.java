@@ -4,15 +4,12 @@ import com.ascend.marketplaceapi.exception.ItemAlreadyExistsException;
 import com.ascend.marketplaceapi.exception.ItemNotFoundException;
 import com.ascend.marketplaceapi.model.SaleItem;
 import com.ascend.marketplaceapi.service.SaleItemService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 // TODO: DECIDE IF I WANT TO REFACTOR AND USE @ResponseStatus ANNOTATION
@@ -30,8 +27,8 @@ public class SaleItemController {
   SaleItemService saleItemService;
 
   @GetMapping("getall")
-  ResponseEntity<HashMap<Object,Object>> getAll() {
-    HashMap<Object,Object> resBody = new HashMap<>();
+  ResponseEntity<HashMap<Object, Object>> getAll() {
+    HashMap<Object, Object> resBody = new HashMap<>();
     resBody.put("items", saleItemService.getAll());
     return ResponseEntity.status(HttpStatus.OK).body(resBody);
   }
@@ -50,7 +47,7 @@ public class SaleItemController {
     return ResponseEntity.status(HttpStatus.OK).body(resBody);
   }
 
-  @PostMapping("")
+  @PostMapping()
   ResponseEntity<HashMap<Object, Object>> create(@RequestBody SaleItem saleItem) {
     HashMap<Object, Object> resBody = new HashMap<>();
     SaleItem createdItem = saleItemService.create(saleItem);
@@ -72,6 +69,17 @@ public class SaleItemController {
     return ResponseEntity.status(HttpStatus.OK).body(resBody);
   }
 
+  @PatchMapping("setsold/{id}")
+  ResponseEntity<HashMap<Object, Object>> setSold(@RequestBody SaleItem req, @PathVariable Integer id) {
+    HashMap<Object, Object> res = new HashMap<>();
+    if (req.getSoldTo().isEmpty()) {
+      throw new IllegalArgumentException("soldTo property is missing");
+    }
+    req.setItemId(id);
+    SaleItem updatedItem = saleItemService.setSold(req);
+    res.put("updatedItem", updatedItem);
+    return ResponseEntity.status(HttpStatus.OK).body(res);
+  }
 
   @DeleteMapping("{id}")
   ResponseEntity<HashMap<Object, Object>> delete(@PathVariable Integer id) {
@@ -97,7 +105,7 @@ public class SaleItemController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ItemNotFoundException.class)
     public HashMap<Object, Object> handleNotFound(ItemNotFoundException exception) {
-      HashMap<Object,Object> resBody = new HashMap<>();
+      HashMap<Object, Object> resBody = new HashMap<>();
       resBody.put("cause", exception.getMessage());
       return resBody;
     }
@@ -105,8 +113,8 @@ public class SaleItemController {
     // Thrown when business logic cannot occur if item already exists.
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ItemAlreadyExistsException.class)
-    public HashMap<Object,Object> handleAlreadyExists(ItemAlreadyExistsException exception) {
-      HashMap<Object,Object> resBody = new HashMap<>();
+    public HashMap<Object, Object> handleAlreadyExists(ItemAlreadyExistsException exception) {
+      HashMap<Object, Object> resBody = new HashMap<>();
       resBody.put("cause", exception.getMessage());
       return resBody;
     }

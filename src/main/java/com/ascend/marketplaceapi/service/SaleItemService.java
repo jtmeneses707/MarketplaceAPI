@@ -15,6 +15,8 @@ public interface SaleItemService {
 
   SaleItem update(SaleItem saleItem);
 
+  SaleItem setSold(SaleItem saleItem);
+
   void delete(Integer id);
 
   void delete(SaleItem saleItem);
