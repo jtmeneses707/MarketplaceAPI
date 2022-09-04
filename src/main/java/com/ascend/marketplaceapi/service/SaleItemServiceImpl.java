@@ -1,5 +1,6 @@
 package com.ascend.marketplaceapi.service;
 
+import com.ascend.marketplaceapi.exception.ItemNotFoundException;
 import com.ascend.marketplaceapi.model.SaleItem;
 import com.ascend.marketplaceapi.repository.SaleItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,9 @@ public class SaleItemServiceImpl implements SaleItemService {
 
       Optional<SaleItem> item = repo.findById(saleItem.getItemId());
       if (!item.isPresent()) {
-        throw new ResponseStatusException(
-            HttpStatus.BAD_REQUEST, "ID not found for item"
-        );
+        throw new ItemNotFoundException("Item not found in DB");
       }
       return item.get();
   }
-
 
 }
