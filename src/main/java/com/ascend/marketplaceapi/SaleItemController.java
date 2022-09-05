@@ -10,15 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.Objects;
-
-// TODO: DECIDE IF I WANT TO REFACTOR AND USE @ResponseStatus ANNOTATION
-// MAY MAKE CODE CLEANE
-
-// TODO: DECIDE IF ID IS NEEDED IN THE REQUEST BODY, OR IF SHOULD SOLELY RELY ON ID IN PATH.
-
-// TODO: DECIDE IF REFACTOR ENDPOINTS SO THAT THEY ALL SHARE SAME URL
-// EX: Can do POST, GET, DELETE, and PUT all from /api/item
 
 @RequestMapping("api/item")
 @RestController
