@@ -11,6 +11,8 @@ public interface SaleItemService {
 
   SaleItem getById(SaleItem saleItem);
 
+  SaleItem getById(Integer id);
+
   SaleItem create(SaleItem saleItem);
 
   SaleItem update(SaleItem saleItem);

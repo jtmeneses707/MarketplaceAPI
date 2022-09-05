@@ -20,11 +20,15 @@ public class SaleItemServiceImpl implements SaleItemService {
   public List<SaleItem> getAll() {
     return repo.findAll();
   }
-
+  
   @Override
   public SaleItem getById(SaleItem saleItem) {
+    return getById(saleItem.getItemId());
+  }
 
-    Optional<SaleItem> item = repo.findById(saleItem.getItemId());
+  @Override
+  public SaleItem getById(Integer id) {
+    Optional<SaleItem> item = repo.findById(id);
     if (!item.isPresent()) {
       throw new ItemNotFoundException("Item not found in DB");
     }
